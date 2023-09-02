@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:proportional_cost_splitter_app/routes/result.dart';
-import 'package:rust_in_flutter/rust_in_flutter.dart';
 
-void main() async {
-  await RustInFlutter.ensureInitialized();
+void main() {
   runApp(const MyApp());
 }
 
@@ -65,13 +63,14 @@ class CostEntry {
 }
 
 InputDecoration textInputDecoration(String hint) {
-  return InputDecoration(
-    fillColor: Colors.white,
-    hintText: hint,
-    border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(10),
-    ),
-  );
+  return
+    InputDecoration(
+      fillColor: Colors.white,
+      hintText: hint,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+    );
 }
 
 class _MyHomePageState extends State<MyHomePage> {
@@ -92,116 +91,102 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
-          // Center is a layout widget. It takes a single child and positions it
-          // in the middle of the parent.
-          child: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-                itemCount: costEntries.length,
-                itemBuilder: (context, index) {
-                  return Container(
-                    margin:
-                        const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 15, horizontal: 15),
-                    decoration: BoxDecoration(
-                      color: Colors.deepPurple,
-                      border: Border.all(
-                        width: 2,
-                      ),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Text(
-                          costEntries[index].name,
-                          style: const TextStyle(
-                              fontSize: 28, color: Colors.white),
-                        ),
-                        Text(
-                          costEntries[index].cost.toString(),
-                          style: const TextStyle(
-                              fontSize: 28, color: Colors.white),
-                        ),
-                        CloseButton(
-                          onPressed: () {
-                            costEntries.removeAt(index);
-                            setState(() {});
-                          },
-                          color: Colors.redAccent,
-                        )
-                      ],
-                    ),
-                  );
-                }),
-          ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
+        // Center is a layout widget. It takes a single child and positions it
+        // in the middle of the parent.
+        child: 
+          Column(
             children: [
               Expanded(
-                child: Container(
-                  margin:
-                      const EdgeInsets.symmetric(vertical: 2, horizontal: 4),
-                  child: TextField(
-                    decoration: textInputDecoration("Name"),
-                    controller: currentNameController,
-                  ),
+                child: ListView.builder(
+                  itemCount: costEntries.length,
+                  itemBuilder: (context, index) {
+                    return
+                      Container(
+                        margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+
+                        decoration: BoxDecoration(
+                          color: Colors.deepPurple,
+                          border: Border.all(
+                            width: 2,
+                          ),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text(costEntries[index].name, style: const TextStyle(fontSize: 28, color: Colors.white),),
+                            Text(costEntries[index].cost.toString(), style: const TextStyle(fontSize: 28, color: Colors.white),),
+                            CloseButton(onPressed: () {costEntries.removeAt(index); setState(() {});}, color: Colors.redAccent,)
+                          ],
+                        ),
+                      );
+                  }
                 ),
               ),
-              Expanded(
-                child: Container(
-                  margin:
-                      const EdgeInsets.symmetric(vertical: 2, horizontal: 4),
-                  child: TextField(
-                    decoration: textInputDecoration("Cost"),
-                    controller: currentCostController,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(vertical: 2, horizontal: 4),
+                      child: TextField(
+                        decoration: textInputDecoration("Name"),
+                        controller: currentNameController,
+                      ),
+                    ),
                   ),
-                ),
+                  Expanded(
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(vertical: 2, horizontal: 4),
+                      child: TextField(
+                        decoration: textInputDecoration("Cost"),
+                        controller: currentCostController,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [ FilteringTextInputFormatter.digitsOnly ],
+                      ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.symmetric(vertical: 2, horizontal: 4),
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          )),
+                      onPressed: (){
+                        if (currentNameController.text.isNotEmpty && currentCostController.text.isNotEmpty) {
+                          double? maybeCurrentCost = double.tryParse(currentCostController.text);
+                          if (maybeCurrentCost != null) {
+                            costEntries.add(CostEntry(currentNameController.text, maybeCurrentCost));
+                            currentNameController.clear();
+                            currentCostController.clear();
+                            setState(() {});
+                          }
+                        }
+
+                      },
+                      child: const Text("Add")),
+                  )
+                ],
               ),
               Container(
                 margin: const EdgeInsets.symmetric(vertical: 2, horizontal: 4),
-                child: TextButton(
-                    style: TextButton.styleFrom(
-                        backgroundColor: Colors.transparent,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        )),
-                    onPressed: () {
-                      if (currentNameController.text.isNotEmpty &&
-                          currentCostController.text.isNotEmpty) {
-                        double? maybeCurrentCost =
-                            double.tryParse(currentCostController.text);
-                        if (maybeCurrentCost != null) {
-                          costEntries.add(CostEntry(
-                              currentNameController.text, maybeCurrentCost));
-                          currentNameController.clear();
-                          currentCostController.clear();
-                          setState(() {});
-                        }
-                      }
-                    },
-                    child: const Text("Add")),
+                child: TextField(
+                  decoration: textInputDecoration("Total"),
+                  controller: finalCostController,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [ FilteringTextInputFormatter.digitsOnly ]
+                ),
               )
             ],
-          ),
-          Container(
-            margin: const EdgeInsets.symmetric(vertical: 2, horizontal: 4),
-            child: TextField(
-                decoration: textInputDecoration("Total"),
-                controller: finalCostController,
-                keyboardType: TextInputType.number,
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly]),
           )
-        ],
-      )),
+      ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
+        onPressed: (){
           double? finalCost = double.tryParse(finalCostController.text);
-          if (finalCost != null && costEntries.isNotEmpty) {
+          if(finalCost != null && costEntries.isNotEmpty) {
             var costEntriesCopy = List.of(costEntries);
             currentCostController.clear();
             currentNameController.clear();
@@ -210,11 +195,7 @@ class _MyHomePageState extends State<MyHomePage> {
             setState(() {});
             Navigator.push(
               context,
-              MaterialPageRoute(
-                  builder: (context) => Result(
-                        finalCost: finalCost,
-                        costEntries: costEntriesCopy,
-                      )),
+              MaterialPageRoute(builder: (context) => Result(finalCost: finalCost, costEntries: costEntriesCopy,)),
             );
           }
         },

@@ -209,14 +209,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.1"
-  ffi:
-    dependency: transitive
-    description:
-      name: ffi
-      sha256: "7bf0adc28a23d395f19f3f1eb21dd7cfd1dd9f8e1c50051c069122e6853bc878"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.0"
   file:
     dependency: transitive
     description:
@@ -419,14 +411,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.4.0"
-  plugin_platform_interface:
-    dependency: transitive
-    description:
-      name: plugin_platform_interface
-      sha256: da3fdfeccc4d4ff2da8f8c556704c08f912542c5fb3cf2233ed75372384a034d
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.6"
   pointycastle:
     dependency: transitive
     description:
@@ -443,14 +427,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.5.1"
-  protobuf:
-    dependency: "direct main"
-    description:
-      name: protobuf
-      sha256: "68645b24e0716782e58948f8467fd42a880f255096a821f9e7d0ec625b00c84d"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.1.0"
   pub_semver:
     dependency: transitive
     description:
@@ -475,14 +451,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.1"
-  rust_in_flutter:
-    dependency: "direct main"
-    description:
-      name: rust_in_flutter
-      sha256: e075a003e37b2ae55098db345384da27a206c1d9e3492506bee978993297133b
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.2.3"
   shelf:
     dependency: transitive
     description:
@@ -642,4 +610,3 @@ packages:
     version: "3.1.2"
 sdks:
   dart: ">=3.0.6 <4.0.0"
-  flutter: ">=3.3.0"
