@@ -9,37 +9,27 @@ use crate::bridge::send_rust_signal;
 use proportional_cost_splitter_lib::scale_to_total;
 use prost::Message;
 
-pub async fn calculate_final_costs(rust_request: RustRequest) -> RustResponse {
+pub async fn calculate_something(rust_request: RustRequest) -> RustResponse {
     match rust_request.operation {
         RustOperation::Create => RustResponse::default(),
         RustOperation::Read => {
             // We import message structs in this match condition
             // because schema will differ by the operation type.
-            use crate::messages::interaction::{RustCalculateRequest, RustCalculateResponse};
-            use crate::messages::schemas::{RustCostEntry, RustFinalCost};
+            use crate::messages::interaction::{CounterReadRequest, CounterReadResponse};
 
             // Decode raw bytes into a Rust message object.
-            let request_message = RustCalculateRequest::decode(&rust_request.bytes[..]).unwrap();
+            let request_message = CounterReadRequest::decode(&rust_request.bytes[..]).unwrap();
 
-            let result = scale_to_total(
-                request_message
-                    .initial_costs
-                    .into_iter()
-                    .map(|entry| (entry.name, entry.initial_cost as f64))
-                    .collect(),
-                request_message.final_total_cost as f64,
-            );
-
-            let final_costs = result
-                .into_iter()
-                .map(|(name, final_cost)| RustFinalCost {
-                    name,
-                    final_cost: final_cost as f32,
-                })
-                .collect::<Vec<_>>();
+            // Perform a simple calculation.
+            let after_value: i32 = request_message.before_number + 7;
 
             // Return the response that will be sent to Dart.
-            let response_message = RustCalculateResponse { final_costs };
+            let response_message = CounterReadResponse {
+                after_number: after_value,
+                dummy_one: request_message.dummy_one,
+                dummy_two: request_message.dummy_two,
+                dummy_three: request_message.dummy_three,
+            };
             RustResponse {
                 successful: true,
                 bytes: response_message.encode_to_vec(),

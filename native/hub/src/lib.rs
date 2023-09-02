@@ -3,8 +3,8 @@ use web_alias::*;
 use with_request::handle_request;
 
 mod bridge;
-mod functions;
 mod messages;
+mod sample_functions;
 mod web_alias;
 mod with_request;
 

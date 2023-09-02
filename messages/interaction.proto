@@ -1,13 +1,19 @@
 syntax = "proto3";
 package interaction;
 
-import "schemas.proto";
+import "sample_schemas.proto";
 
-message RustCalculateRequest {
-  repeated schemas.RustCostEntry initial_costs = 1;
-  float final_total_cost = 2;
+message CounterReadRequest {
+  string letter = 1;
+  int32 before_number = 2;
+  uint32 dummy_one = 3;
+  sample_schemas.SampleSchema dummy_two = 4;
+  repeated int32 dummy_three = 5;
 }
 
-message RustCalculateResponse {
-  repeated schemas.RustFinalCost final_costs = 1;
+message CounterReadResponse {
+  int32 after_number = 1;
+  uint32 dummy_one = 2;
+  sample_schemas.SampleSchema dummy_two = 3;
+  repeated int32 dummy_three = 4;
 }
