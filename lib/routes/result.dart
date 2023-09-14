@@ -7,7 +7,7 @@ class Result extends StatelessWidget {
   final List<CostEntry> costEntries;
   final double finalCost;
 
-  Result({super.key, required this.costEntries, required this.finalCost});
+  const Result({super.key, required this.costEntries, required this.finalCost});
 
   @override
   Widget build(BuildContext context) {
