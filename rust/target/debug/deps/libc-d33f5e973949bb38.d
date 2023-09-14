@@ -1,9 +1,0 @@
-D:\Repos\proportional_cost_splitter_app\rust\target\debug\deps\libc-d33f5e973949bb38.rmeta: C:\Users\raiyan.hossain\.cargo\registry\src\index.crates.io-6f17d22bba15001f\libc-0.2.147\src\lib.rs C:\Users\raiyan.hossain\.cargo\registry\src\index.crates.io-6f17d22bba15001f\libc-0.2.147\src\macros.rs C:\Users\raiyan.hossain\.cargo\registry\src\index.crates.io-6f17d22bba15001f\libc-0.2.147\src\fixed_width_ints.rs C:\Users\raiyan.hossain\.cargo\registry\src\index.crates.io-6f17d22bba15001f\libc-0.2.147\src\windows\mod.rs C:\Users\raiyan.hossain\.cargo\registry\src\index.crates.io-6f17d22bba15001f\libc-0.2.147\src\windows\msvc\mod.rs
-
-D:\Repos\proportional_cost_splitter_app\rust\target\debug\deps\libc-d33f5e973949bb38.d: C:\Users\raiyan.hossain\.cargo\registry\src\index.crates.io-6f17d22bba15001f\libc-0.2.147\src\lib.rs C:\Users\raiyan.hossain\.cargo\registry\src\index.crates.io-6f17d22bba15001f\libc-0.2.147\src\macros.rs C:\Users\raiyan.hossain\.cargo\registry\src\index.crates.io-6f17d22bba15001f\libc-0.2.147\src\fixed_width_ints.rs C:\Users\raiyan.hossain\.cargo\registry\src\index.crates.io-6f17d22bba15001f\libc-0.2.147\src\windows\mod.rs C:\Users\raiyan.hossain\.cargo\registry\src\index.crates.io-6f17d22bba15001f\libc-0.2.147\src\windows\msvc\mod.rs
-
-C:\Users\raiyan.hossain\.cargo\registry\src\index.crates.io-6f17d22bba15001f\libc-0.2.147\src\lib.rs:
-C:\Users\raiyan.hossain\.cargo\registry\src\index.crates.io-6f17d22bba15001f\libc-0.2.147\src\macros.rs:
-C:\Users\raiyan.hossain\.cargo\registry\src\index.crates.io-6f17d22bba15001f\libc-0.2.147\src\fixed_width_ints.rs:
-C:\Users\raiyan.hossain\.cargo\registry\src\index.crates.io-6f17d22bba15001f\libc-0.2.147\src\windows\mod.rs:
-C:\Users\raiyan.hossain\.cargo\registry\src\index.crates.io-6f17d22bba15001f\libc-0.2.147\src\windows\msvc\mod.rs:
