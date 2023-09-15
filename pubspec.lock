@@ -503,10 +503,10 @@ packages:
     dependency: "direct main"
     description:
       name: rust_in_flutter
-      sha256: c37a6e0d26e6decddf23b67b3a6db2cb4a7e0842f7657c9378cd8e4d53691500
+      sha256: a86120b9f9a196b4838ef2754fcfbdac96c99552005cd216a1c6953af7bd9228
       url: "https://pub.dev"
     source: hosted
-    version: "3.7.3"
+    version: "3.7.4"
   shelf:
     dependency: transitive
     description:
