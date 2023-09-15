@@ -6,16 +6,9 @@ message RustCostEntry {
   float initial_cost = 2;
 }
 
-message RustFinalCost {
-  string name = 1;
-  float final_cost = 2;
-}
-
 message RustCalculateRequest {
   repeated RustCostEntry initial_costs = 1;
   float final_total_cost = 2;
 }
 
-message RustCalculateResponse {
-  repeated RustFinalCost final_costs = 1;
-}
+message RustCalculateResponse {}
