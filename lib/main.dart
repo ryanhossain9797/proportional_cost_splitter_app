@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:proportional_cost_splitter_app/messages/state.pb.dart' as state;
+import 'package:proportional_cost_splitter_app/messages/reset_action.pb.dart'
+    as reset_action;
 import 'package:proportional_cost_splitter_app/routes/input.dart';
 import 'package:proportional_cost_splitter_app/routes/result.dart';
 import 'package:rust_in_flutter/rust_in_flutter.dart';
@@ -69,6 +70,15 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
+
+    final rustRequest = RustRequest(
+      resource: reset_action.ID,
+      operation: RustOperation.Read,
+      message: reset_action.ResetAction().writeToBuffer(),
+    );
+
+    requestToRust(rustRequest);
+
     return StreamBuilder<RustSignal>(
         stream: rustBroadcaster.stream.where((rustSignal) {
       return rustSignal.resource == state.ID;
@@ -78,11 +88,14 @@ class _MyHomePageState extends State<MyHomePage> {
           child: CircularProgressIndicator(),
         );
       } else {
-        var currentState = state.AppState.fromBuffer(snapshot.data!.bytes);
+        var currentState = state.AppState.fromBuffer(snapshot.data!.message!);
 
         switch (currentState.whichState()) {
           case state.AppState_State.calculated:
             return ResultScreen(state: currentState.calculated);
+
+          case state.AppState_State.readingInput:
+          case state.AppState_State.notSet:
           default:
             return const InputScreen();
         }

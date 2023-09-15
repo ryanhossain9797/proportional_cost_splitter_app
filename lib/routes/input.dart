@@ -167,7 +167,7 @@ class _InputScreenState extends State<InputScreen> {
             final rustRequest = RustRequest(
               resource: calculate_action.ID,
               operation: RustOperation.Read,
-              bytes: calculateRequest.writeToBuffer(),
+              message: calculateRequest.writeToBuffer(),
             );
 
             requestToRust(rustRequest);

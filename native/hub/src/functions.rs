@@ -6,10 +6,10 @@ use crate::bridge::api::RustRequest;
 use crate::bridge::api::RustResponse;
 use crate::bridge::api::RustSignal;
 use crate::bridge::send_rust_signal;
+use crate::messages::state::app_state::State::Calculated;
+use crate::messages::state::{AppState, CalculatedState, RustFinalCost};
 use proportional_cost_splitter_lib::scale_to_total;
 use prost::Message;
-use crate::messages::state::{app_state, AppState, CalculatedState, ID, RustFinalCost};
-use crate::messages::state::app_state::State::Calculated;
 
 pub async fn calculate_final_costs(rust_request: RustRequest) -> RustResponse {
     match rust_request.operation {
@@ -46,9 +46,11 @@ pub async fn calculate_final_costs(rust_request: RustRequest) -> RustResponse {
                 bytes: response_message.encode_to_vec(),
             };
 
-            let signal_message = AppState { state: Some( Calculated (CalculatedState { final_costs }))  };
+            let signal_message = AppState {
+                state: Some(Calculated(CalculatedState { final_costs })),
+            };
             let rust_signal = RustSignal {
-                resource: ID,
+                resource: crate::messages::state::ID,
                 bytes: signal_message.encode_to_vec(),
             };
 

@@ -1,0 +1,6 @@
+syntax = "proto3";
+package reset_action;
+
+message ResetAction {}
+
+message ResetActionResult {}

@@ -14,7 +14,7 @@ message ReadingInputState {}
 
 message AppState {
     oneof state {
-      ReadingInputState reding_input = 1;
+      ReadingInputState reading_input = 1;
       CalculatedState calculated = 2;
     }
 }

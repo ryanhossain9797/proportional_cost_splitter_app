@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:proportional_cost_splitter_app/messages/state.pbserver.dart';
+import 'package:proportional_cost_splitter_app/messages/reset_action.pb.dart'
+    as reset_action;
+import 'package:rust_in_flutter/rust_in_flutter.dart';
 
 class ResultScreen extends StatelessWidget {
   final CalculatedState state;
@@ -46,7 +49,13 @@ class ResultScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pop(context);
+          final rustRequest = RustRequest(
+            resource: reset_action.ID,
+            operation: RustOperation.Read,
+            message: reset_action.ResetAction().writeToBuffer(),
+          );
+
+          requestToRust(rustRequest);
         },
         tooltip: 'calculate',
         child: const Icon(Icons.arrow_back_rounded),
