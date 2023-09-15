@@ -1,0 +1,20 @@
+syntax = "proto3";
+package state;
+
+message RustFinalCost {
+  string name = 1;
+  float final_cost = 2;
+}
+
+message CalculatedState {
+  repeated RustFinalCost final_costs = 1;
+}
+
+message ReadingInputState {}
+
+message AppState {
+    oneof state {
+      ReadingInputState reding_input = 1;
+      CalculatedState calculated = 2;
+    }
+}

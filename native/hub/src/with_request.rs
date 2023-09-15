@@ -14,7 +14,7 @@ pub async fn handle_request(request_unique: RustRequestUnique) -> RustResponseUn
     // Run the function that corresponds to the address.
     let rust_resource = rust_request.resource;
     let rust_response = match rust_resource {
-        messages::calculate::ID => functions::calculate_final_costs(rust_request).await,
+        messages::calculate_action::ID => functions::calculate_final_costs(rust_request).await,
         _ => RustResponse::default(),
     };
 
