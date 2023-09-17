@@ -1,13 +1,13 @@
 syntax = "proto3";
 package state;
 
-message RustFinalCost {
+message FinalCost {
   string name = 1;
   float final_cost = 2;
 }
 
 message CalculatedState {
-  repeated RustFinalCost final_costs = 1;
+  repeated FinalCost final_costs = 1;
 }
 
 message ReadingInputState {}

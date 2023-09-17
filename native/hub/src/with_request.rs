@@ -8,7 +8,7 @@ use crate::bridge::api::{RustRequestUnique, RustResponse, RustResponseUnique, Ru
 use crate::bridge::send_rust_signal;
 use crate::functions;
 use crate::messages::state::app_state::State;
-use crate::messages::state::{AppState, ReadingInputState, ID};
+use crate::messages::state::{AppState, ReadingInputState};
 use crate::messages::*;
 use crate::messages::{self, state};
 
@@ -27,14 +27,16 @@ pub async fn handle_request(request_unique: RustRequestUnique) -> RustResponseUn
             };
             let rust_signal = RustSignal {
                 resource: state::ID,
-                bytes: signal_message.encode_to_vec(),
+                message: Some(signal_message.encode_to_vec()),
+                blob: None,
             };
 
             send_rust_signal(rust_signal);
             let response_message = messages::reset_action::ResetActionResult {};
             let empty_response = RustResponse {
                 successful: true,
-                bytes: response_message.encode_to_vec(),
+                message: Some(response_message.encode_to_vec()),
+                blob: None,
             };
             empty_response
         }

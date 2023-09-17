@@ -154,13 +154,6 @@ class _InputScreenState extends State<InputScreen> {
             var initialCostsInput = costEntries.map((e) =>
                 calculate_action.CostEntry(name: e.name, initialCost: e.cost));
 
-            currentCostController.clear();
-            currentNameController.clear();
-            finalCostController.clear();
-            costEntries.clear();
-
-            setState(() {});
-
             var calculateRequest = calculate_action.CalculateAction(
                 initialCosts: initialCostsInput, finalTotalCost: finalCost);
 

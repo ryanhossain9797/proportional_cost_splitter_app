@@ -93,7 +93,6 @@ class _MyHomePageState extends State<MyHomePage> {
         switch (currentState.whichState()) {
           case state.AppState_State.calculated:
             return ResultScreen(state: currentState.calculated);
-
           case state.AppState_State.readingInput:
           case state.AppState_State.notSet:
           default:
