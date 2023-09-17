@@ -13,7 +13,8 @@ mod with_request;
 async fn main() {
     // This is `tokio::sync::mpsc::Reciver` that receives the requests from Dart.
     let mut request_receiver = bridge::get_request_receiver();
-
+    // Repeat `crate::spawn` anywhere in your code
+    // if more concurrent tasks are needed.
     while let Some(request_unique) = request_receiver.recv().await {
         crate::spawn(async {
             let response_unique = handle_request(request_unique).await;
