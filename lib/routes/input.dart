@@ -150,6 +150,7 @@ class _InputScreenState extends State<InputScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           double? finalCost = double.tryParse(finalCostController.text);
+          finalCostController.clear();
           if (finalCost != null && costEntries.isNotEmpty) {
             var initialCostsInput = costEntries.map((e) =>
                 calculate_action.CostEntry(name: e.name, initialCost: e.cost));
