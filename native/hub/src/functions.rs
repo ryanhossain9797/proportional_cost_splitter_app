@@ -18,7 +18,7 @@ pub async fn calculate_final_costs(rust_request: RustRequest) -> RustResponse {
         RustOperation::Read => {
             // We import message structs in this match condition
             // because schema will differ by the operation type.
-            use crate::messages::calculate_action::{CalculateAction, CalculateActionResult};
+            use crate::messages::calculate_action::CalculateAction;
 
             match rust_request.message {
                 Some(message) => {
@@ -56,7 +56,7 @@ pub async fn calculate_final_costs(rust_request: RustRequest) -> RustResponse {
 
                     RustResponse {
                         successful: true,
-                        message: Some(CalculateActionResult {}.encode_to_vec()),
+                        message: None,
                         blob: None,
                     }
                 }

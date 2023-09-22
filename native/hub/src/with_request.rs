@@ -31,10 +31,9 @@ pub async fn handle_request(request_unique: RustRequestUnique) -> RustResponseUn
             };
 
             send_rust_signal(rust_signal);
-            let response_message = messages::reset_action::ResetActionResult {};
             let empty_response = RustResponse {
                 successful: true,
-                message: Some(response_message.encode_to_vec()),
+                message: None,
                 blob: None,
             };
             empty_response

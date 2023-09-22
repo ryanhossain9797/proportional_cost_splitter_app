@@ -10,5 +10,3 @@ message CalculateAction {
   repeated CostEntry initial_costs = 1;
   float final_total_cost = 2;
 }
-
-message CalculateActionResult {}
