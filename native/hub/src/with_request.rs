@@ -2,7 +2,9 @@
 //! when a `RustRequest` was received from Dart
 //! and returns `RustResponse`.
 
-use crate::bridge::api::{RustRequestUnique, RustResponse, RustResponseUnique, RustSignal};
+use crate::bridge::api::{
+    RustOperation, RustRequestUnique, RustResponse, RustResponseUnique, RustSignal,
+};
 use crate::bridge::send_rust_signal;
 use crate::functions;
 use crate::messages::state::app_state::State;
@@ -18,27 +20,15 @@ pub async fn handle_request(request_unique: RustRequestUnique) -> RustResponseUn
 
     // Run the function that corresponds to the address.
     let rust_resource = rust_request.resource;
-    let rust_response = match rust_resource {
-        calculate_action::ID => functions::calculate_final_costs(rust_request).await,
-        reset_action::ID => {
-            let signal_message = AppState {
-                state: Some(State::ReadingInput(ReadingInputState {})),
-            };
-            let rust_signal = RustSignal {
-                resource: state::ID,
-                message: Some(signal_message.encode_to_vec()),
-                blob: None,
-            };
-
-            send_rust_signal(rust_signal);
-            let empty_response = RustResponse {
-                successful: true,
-                message: None,
-                blob: None,
-            };
-            empty_response
-        }
-        _ => RustResponse::default(),
+    let rust_response = match rust_request.operation {
+        RustOperation::Update => match rust_resource {
+            calculate_action::ID => functions::calculate_final_costs(rust_request.message).await,
+            reset_action::ID => functions::reset().await,
+            _ => RustResponse::default(),
+        },
+        RustOperation::Create => RustResponse::default(),
+        RustOperation::Read => RustResponse::default(),
+        RustOperation::Delete => RustResponse::default(),
     };
 
     // Return the response.
