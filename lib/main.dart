@@ -42,7 +42,7 @@ class _MyHomePageState extends State<MyHomePage> {
     final rustRequest = RustRequest(
       resource: reset_action.ID,
       operation: RustOperation.Update,
-      message: reset_action.ResetAction().writeToBuffer(),
+      message: reset_action.ResetActionDto().writeToBuffer(),
     );
 
     requestToRust(rustRequest);
@@ -56,13 +56,14 @@ class _MyHomePageState extends State<MyHomePage> {
           child: CircularProgressIndicator(),
         );
       } else {
-        var currentState = state.AppState.fromBuffer(snapshot.data!.message!);
+        var currentState =
+            state.AppStateDto.fromBuffer(snapshot.data!.message!);
 
         switch (currentState.whichState()) {
-          case state.AppState_State.calculated:
+          case state.AppStateDto_State.calculated:
             return ResultScreen(state: currentState.calculated);
-          case state.AppState_State.readingInput:
-          case state.AppState_State.notSet:
+          case state.AppStateDto_State.readingInput:
+          case state.AppStateDto_State.notSet:
           default:
             return const InputScreen();
         }

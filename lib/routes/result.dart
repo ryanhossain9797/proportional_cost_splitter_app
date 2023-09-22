@@ -5,7 +5,7 @@ import 'package:proportional_cost_splitter_app/messages/reset_action.pb.dart'
 import 'package:rust_in_flutter/rust_in_flutter.dart';
 
 class ResultScreen extends StatelessWidget {
-  final CalculatedState state;
+  final CalculatedStateDto state;
 
   const ResultScreen({super.key, required this.state});
 
@@ -52,7 +52,7 @@ class ResultScreen extends StatelessWidget {
           final rustRequest = RustRequest(
             resource: reset_action.ID,
             operation: RustOperation.Read,
-            message: reset_action.ResetAction().writeToBuffer(),
+            message: reset_action.ResetActionDto().writeToBuffer(),
           );
 
           requestToRust(rustRequest);

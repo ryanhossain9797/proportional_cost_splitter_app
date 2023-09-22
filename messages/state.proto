@@ -1,20 +1,20 @@
 syntax = "proto3";
 package state;
 
-message FinalCost {
+message FinalCostDto {
   string name = 1;
   float final_cost = 2;
 }
 
-message CalculatedState {
-  repeated FinalCost final_costs = 1;
+message CalculatedStateDto {
+  repeated FinalCostDto final_costs = 1;
 }
 
-message ReadingInputState {}
+message ReadingInputStateDto {}
 
-message AppState {
+message AppStateDto {
     oneof state {
-      ReadingInputState reading_input = 1;
-      CalculatedState calculated = 2;
+      ReadingInputStateDto reading_input = 1;
+      CalculatedStateDto calculated = 2;
     }
 }

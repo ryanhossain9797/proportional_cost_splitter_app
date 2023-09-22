@@ -7,8 +7,8 @@ use crate::bridge::api::{
 };
 use crate::bridge::send_rust_signal;
 use crate::functions;
-use crate::messages::state::app_state::State;
-use crate::messages::state::{AppState, ReadingInputState};
+use crate::messages::state::app_state_dto::State;
+use crate::messages::state::{AppStateDto, ReadingInputStateDto};
 use crate::messages::*;
 use crate::messages::{self, state};
 use prost::Message;

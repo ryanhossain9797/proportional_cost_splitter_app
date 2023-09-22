@@ -153,9 +153,10 @@ class _InputScreenState extends State<InputScreen> {
           finalCostController.clear();
           if (finalCost != null && costEntries.isNotEmpty) {
             var initialCostsInput = costEntries.map((e) =>
-                calculate_action.CostEntry(name: e.name, initialCost: e.cost));
+                calculate_action.CostEntryDto(
+                    name: e.name, initialCost: e.cost));
 
-            var calculateRequest = calculate_action.CalculateAction(
+            var calculateRequest = calculate_action.CalculateActionDto(
                 initialCosts: initialCostsInput, finalTotalCost: finalCost);
 
             final rustRequest = RustRequest(
