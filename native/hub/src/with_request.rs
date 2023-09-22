@@ -2,8 +2,6 @@
 //! when a `RustRequest` was received from Dart
 //! and returns `RustResponse`.
 
-use prost::Message;
-
 use crate::bridge::api::{RustRequestUnique, RustResponse, RustResponseUnique, RustSignal};
 use crate::bridge::send_rust_signal;
 use crate::functions;
@@ -11,6 +9,7 @@ use crate::messages::state::app_state::State;
 use crate::messages::state::{AppState, ReadingInputState};
 use crate::messages::*;
 use crate::messages::{self, state};
+use prost::Message;
 
 pub async fn handle_request(request_unique: RustRequestUnique) -> RustResponseUnique {
     // Get the request data.
