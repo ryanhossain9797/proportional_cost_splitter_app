@@ -51,7 +51,7 @@ class ResultScreen extends StatelessWidget {
         onPressed: () {
           final rustRequest = RustRequest(
             resource: reset_action.ID,
-            operation: RustOperation.Read,
+            operation: RustOperation.Update,
             message: reset_action.ResetActionDto().writeToBuffer(),
           );
 

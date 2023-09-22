@@ -6,3 +6,4 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+proportional_cost_splitter = { git = "https://github.com/ryanhossain9797/proportional_cost_splitter" }
