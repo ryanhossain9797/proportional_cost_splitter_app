@@ -10,7 +10,15 @@ message CalculatedStateDto {
   repeated FinalCostDto final_costs = 1;
 }
 
-message ReadingInputStateDto {}
+message CurrentCostEntryDto {
+  string name = 1;
+  float cost = 2;
+}
+
+message ReadingInputStateDto {
+  float padding = 1;
+  repeated CurrentCostEntryDto current_cost_entries = 2;
+}
 
 message AppStateDto {
     oneof state {

@@ -63,9 +63,14 @@ class _MyHomePageState extends State<MyHomePage> {
           case state.AppStateDto_State.calculated:
             return ResultScreen(state: currentState.calculated);
           case state.AppStateDto_State.readingInput:
+            return InputScreen(
+              state: currentState.readingInput,
+            );
           case state.AppStateDto_State.notSet:
           default:
-            return const InputScreen();
+            return const Scaffold(
+              body: Center(child: Text("Fatal Error")),
+            );
         }
       }
     });

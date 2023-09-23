@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:proportional_cost_splitter_app/messages/add_cost_entry_action.pb.dart'
+    as add_cost_entry_action;
 import 'package:proportional_cost_splitter_app/messages/calculate_action.pb.dart'
     as calculate_action;
+import 'package:proportional_cost_splitter_app/messages/state.pb.dart';
 import 'package:rust_in_flutter/rust_in_flutter.dart';
 
 class CostEntry {
@@ -21,17 +24,15 @@ InputDecoration textInputDecoration(String hint) {
 }
 
 class InputScreen extends StatefulWidget {
-  const InputScreen({
-    super.key,
-  });
+  final ReadingInputStateDto state;
+
+  const InputScreen({super.key, required this.state});
 
   @override
   State<InputScreen> createState() => _InputScreenState();
 }
 
 class _InputScreenState extends State<InputScreen> {
-  List<CostEntry> costEntries = [];
-
   TextEditingController currentNameController = TextEditingController();
   TextEditingController currentCostController = TextEditingController();
   TextEditingController finalCostController = TextEditingController();
@@ -47,7 +48,7 @@ class _InputScreenState extends State<InputScreen> {
         children: [
           Expanded(
             child: ListView.builder(
-                itemCount: costEntries.length,
+                itemCount: widget.state.currentCostEntries.length,
                 itemBuilder: (context, index) {
                   return Container(
                     margin:
@@ -65,22 +66,23 @@ class _InputScreenState extends State<InputScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Text(
-                          costEntries[index].name,
+                          widget.state.currentCostEntries[index].name,
                           style: const TextStyle(
                               fontSize: 28, color: Colors.white),
                         ),
                         Text(
-                          costEntries[index].cost.toString(),
+                          widget.state.currentCostEntries[index].cost
+                              .toString(),
                           style: const TextStyle(
                               fontSize: 28, color: Colors.white),
                         ),
-                        CloseButton(
-                          onPressed: () {
-                            costEntries.removeAt(index);
-                            setState(() {});
-                          },
-                          color: Colors.redAccent,
-                        )
+                        // CloseButton(
+                        //   onPressed: () {
+                        //     costEntries.removeAt(index);
+                        //     setState(() {});
+                        //   },
+                        //   color: Colors.redAccent,
+                        // )
                       ],
                     ),
                   );
@@ -125,11 +127,21 @@ class _InputScreenState extends State<InputScreen> {
                         double? maybeCurrentCost =
                             double.tryParse(currentCostController.text);
                         if (maybeCurrentCost != null) {
-                          costEntries.add(CostEntry(
-                              currentNameController.text, maybeCurrentCost));
+                          final addCostEntryAction =
+                              add_cost_entry_action.AddCostEntryActionDto(
+                                  name: currentNameController.text,
+                                  initialCost: maybeCurrentCost);
+                          final rustRequest = RustRequest(
+                            resource: add_cost_entry_action.ID,
+                            operation: RustOperation.Update,
+                            message: addCostEntryAction.writeToBuffer(),
+                          );
+
                           currentNameController.clear();
                           currentCostController.clear();
                           setState(() {});
+
+                          requestToRust(rustRequest);
                         }
                       }
                     },
@@ -151,18 +163,14 @@ class _InputScreenState extends State<InputScreen> {
         onPressed: () {
           double? finalCost = double.tryParse(finalCostController.text);
           finalCostController.clear();
-          if (finalCost != null && costEntries.isNotEmpty) {
-            var initialCostsInput = costEntries.map((e) =>
-                calculate_action.CostEntryDto(
-                    name: e.name, initialCost: e.cost));
-
-            var calculateRequest = calculate_action.CalculateActionDto(
-                initialCosts: initialCostsInput, finalTotalCost: finalCost);
+          if (finalCost != null && widget.state.currentCostEntries.isNotEmpty) {
+            var calculateAction =
+                calculate_action.CalculateActionDto(finalTotalCost: finalCost);
 
             final rustRequest = RustRequest(
               resource: calculate_action.ID,
               operation: RustOperation.Update,
-              message: calculateRequest.writeToBuffer(),
+              message: calculateAction.writeToBuffer(),
             );
 
             requestToRust(rustRequest);

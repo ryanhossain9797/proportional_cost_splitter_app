@@ -1,12 +1,7 @@
 syntax = "proto3";
 package calculate_action;
 
-message CostEntryDto {
-  optional string name = 1;
-  float initial_cost = 2;
-}
 
 message CalculateActionDto {
-  repeated CostEntryDto initial_costs = 1;
   float final_total_cost = 2;
 }

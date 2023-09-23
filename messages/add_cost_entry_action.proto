@@ -1,0 +1,7 @@
+syntax = "proto3";
+package add_cost_entry_action;
+
+message AddCostEntryActionDto {
+  string name = 1;
+  float initial_cost = 2;
+}
