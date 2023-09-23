@@ -2,14 +2,11 @@
 //! You might want to remove this module in production.
 
 use crate::bridge::api::RustResponse;
-use crate::bridge::api::RustSignal;
-use crate::bridge::send_rust_signal;
-use crate::messages::calculate_action::{CalculateActionDto, CostEntryDto};
-use crate::messages::state;
-use crate::messages::state::app_state_dto;
-use crate::messages::state::{AppStateDto, CalculatedStateDto, FinalCostDto, ReadingInputStateDto};
-use app_state::{calculate_final_costs_impl, CostEntry};
-use proportional_cost_splitter_lib::scale_to_total;
+use crate::messages::calculate_action::CalculateActionDto;
+use app_state::handle_app_action;
+use app_state::AppAction;
+use app_state::CalculateAction;
+use app_state::CostEntry;
 use prost::Message;
 
 pub async fn calculate_final_costs(message_data: Option<Vec<u8>>) -> RustResponse {
@@ -18,8 +15,8 @@ pub async fn calculate_final_costs(message_data: Option<Vec<u8>>) -> RustRespons
             // Decode raw bytes into a Rust message object.
             let request_message = CalculateActionDto::decode(&message[..]).unwrap();
 
-            app_state::calculate_final_costs_impl(
-                request_message
+            handle_app_action(AppAction::CalculateAction(CalculateAction {
+                initial_costs: request_message
                     .initial_costs
                     .iter()
                     .map(|dto| CostEntry {
@@ -27,8 +24,8 @@ pub async fn calculate_final_costs(message_data: Option<Vec<u8>>) -> RustRespons
                         initial_cost: dto.initial_cost,
                     })
                     .collect::<Vec<_>>(),
-                request_message.final_total_cost,
-            )
+                final_total: request_message.final_total_cost,
+            }))
             .await;
 
             RustResponse {
@@ -41,10 +38,7 @@ pub async fn calculate_final_costs(message_data: Option<Vec<u8>>) -> RustRespons
     }
 }
 pub async fn reset() -> RustResponse {
-    crate::print!("reset");
-    app_state::reset_impl().await;
-
-    crate::print!("reset complete");
+    handle_app_action(AppAction::ResetAction).await;
 
     let empty_response = RustResponse {
         successful: true,

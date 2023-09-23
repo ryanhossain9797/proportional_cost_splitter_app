@@ -30,16 +30,36 @@ impl Default for AppState {
 
 pub static STATE: OnceLock<Mutex<AppState>> = OnceLock::new();
 
-pub async fn calculate_final_costs_impl(initial_costs: Vec<CostEntry>, final_total: f32) {
+pub struct CalculateAction {
+    pub initial_costs: Vec<CostEntry>,
+    pub final_total: f32,
+}
+
+pub enum AppAction {
+    CalculateAction(CalculateAction),
+    ResetAction,
+}
+
+pub async fn handle_app_action(action: AppAction) {
+    match action {
+        AppAction::CalculateAction(calculate_action) => {
+            calculate_final_costs_impl(calculate_action).await
+        }
+        AppAction::ResetAction => reset_impl().await,
+    };
+}
+
+async fn calculate_final_costs_impl(action: CalculateAction) {
     // We import message structs in this match condition
     // because schema will differ by the operation type.
 
     let result = scale_to_total(
-        initial_costs
+        action
+            .initial_costs
             .into_iter()
             .map(|entry| (entry.name, entry.initial_cost as f64))
             .collect(),
-        final_total as f64,
+        action.final_total as f64,
     )
     .into_iter()
     .map(|(name, final_cost)| FinalCost {
@@ -60,7 +80,7 @@ pub async fn calculate_final_costs_impl(initial_costs: Vec<CostEntry>, final_tot
     *state = new_state;
 }
 
-pub async fn reset_impl() {
+async fn reset_impl() {
     let new_state = AppState::ReadingInputState;
 
     let mut state = STATE
