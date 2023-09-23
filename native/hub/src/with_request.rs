@@ -6,14 +6,15 @@ use crate::bridge::api::{
     RustOperation, RustRequestUnique, RustResponse, RustResponseUnique, RustSignal,
 };
 use crate::bridge::send_rust_signal;
-use crate::functions;
+use crate::functions::successful_empty_rust_response;
+use crate::messages::calculate_action::CalculateActionDto;
 use crate::messages::state::app_state_dto::State;
 use crate::messages::state::{
     app_state_dto, AppStateDto, CalculatedStateDto, FinalCostDto, ReadingInputStateDto,
 };
 use crate::messages::*;
 use crate::messages::{self, state};
-use app_state::AppState;
+use app_state::{handle_app_action, AppAction, AppState};
 use prost::Message;
 use std::sync::Mutex;
 
@@ -23,13 +24,18 @@ pub async fn handle_request(request_unique: RustRequestUnique) -> RustResponseUn
 
     // Run the function that corresponds to the address.
     let rust_resource = rust_request.resource;
-    let rust_response = match rust_request.operation {
-        RustOperation::Update => {
+    let rust_response = match (rust_request.operation, rust_request.message) {
+        (RustOperation::Update, Some(message)) => {
             let rust_response = match rust_resource {
                 calculate_action::ID => {
-                    functions::calculate_final_costs(rust_request.message).await
+                    let dto = CalculateActionDto::decode(&message[..]).unwrap();
+                    handle_app_action(dto.into()).await;
+                    successful_empty_rust_response()
                 }
-                reset_action::ID => functions::reset().await,
+                reset_action::ID => {
+                    handle_app_action(AppAction::ResetAction).await;
+                    successful_empty_rust_response()
+                }
                 _ => RustResponse::default(),
             };
 
@@ -40,7 +46,6 @@ pub async fn handle_request(request_unique: RustRequestUnique) -> RustResponseUn
 
             match &*new_state {
                 AppState::ReadingInputState => {
-                    crate::print!("ReadingInputState");
                     let signal_message = AppStateDto {
                         state: Some(app_state_dto::State::ReadingInput(ReadingInputStateDto {})),
                     };
@@ -54,7 +59,6 @@ pub async fn handle_request(request_unique: RustRequestUnique) -> RustResponseUn
                 }
 
                 AppState::CalculatedState(state) => {
-                    crate::print!("CalculatedState");
                     let state = AppStateDto {
                         state: Some(app_state_dto::State::Calculated(CalculatedStateDto {
                             final_costs: state
@@ -80,9 +84,10 @@ pub async fn handle_request(request_unique: RustRequestUnique) -> RustResponseUn
 
             rust_response
         }
-        RustOperation::Create => RustResponse::default(),
-        RustOperation::Read => RustResponse::default(),
-        RustOperation::Delete => RustResponse::default(),
+        (RustOperation::Update, None) => RustResponse::default(),
+        (RustOperation::Create, _) => RustResponse::default(),
+        (RustOperation::Read, _) => RustResponse::default(),
+        (RustOperation::Delete, _) => RustResponse::default(),
     };
 
     // Return the response.

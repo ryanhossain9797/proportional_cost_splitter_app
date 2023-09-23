@@ -3,47 +3,37 @@
 
 use crate::bridge::api::RustResponse;
 use crate::messages::calculate_action::CalculateActionDto;
-use app_state::handle_app_action;
+use crate::messages::calculate_action::CostEntryDto;
 use app_state::AppAction;
 use app_state::CalculateAction;
 use app_state::CostEntry;
-use prost::Message;
 
-pub async fn calculate_final_costs(message_data: Option<Vec<u8>>) -> RustResponse {
-    match message_data {
-        Some(message) => {
-            // Decode raw bytes into a Rust message object.
-            let request_message = CalculateActionDto::decode(&message[..]).unwrap();
-
-            handle_app_action(AppAction::CalculateAction(CalculateAction {
-                initial_costs: request_message
-                    .initial_costs
-                    .iter()
-                    .map(|dto| CostEntry {
-                        name: dto.name.clone(),
-                        initial_cost: dto.initial_cost,
-                    })
-                    .collect::<Vec<_>>(),
-                final_total: request_message.final_total_cost,
-            }))
-            .await;
-
-            RustResponse {
-                successful: true,
-                message: None,
-                blob: None,
-            }
+impl Into<CostEntry> for CostEntryDto {
+    fn into(self) -> CostEntry {
+        CostEntry {
+            name: self.name,
+            initial_cost: self.initial_cost,
         }
-        None => RustResponse::default(),
     }
 }
-pub async fn reset() -> RustResponse {
-    handle_app_action(AppAction::ResetAction).await;
 
-    let empty_response = RustResponse {
+impl Into<AppAction> for CalculateActionDto {
+    fn into(self) -> AppAction {
+        AppAction::CalculateAction(CalculateAction {
+            initial_costs: self
+                .initial_costs
+                .into_iter()
+                .map(|cost_entry_dto| cost_entry_dto.into())
+                .collect::<Vec<_>>(),
+            final_total: self.final_total_cost,
+        })
+    }
+}
+
+pub fn successful_empty_rust_response() -> RustResponse {
+    RustResponse {
         successful: true,
         message: None,
         blob: None,
-    };
-    empty_response
+    }
 }
