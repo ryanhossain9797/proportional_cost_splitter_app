@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use std::sync::Mutex;
 use std::sync::OnceLock;
 
@@ -10,7 +11,7 @@ pub struct CostEntry {
 }
 
 pub struct ReadingInputState {
-    pub current_entries: Vec<CostEntry>,
+    pub current_entries: HashMap<String, CostEntry>,
 }
 
 pub struct FinalCost {
@@ -30,7 +31,7 @@ pub enum AppState {
 impl Default for AppState {
     fn default() -> Self {
         AppState::ReadingInputState(ReadingInputState {
-            current_entries: Vec::new(),
+            current_entries: HashMap::new(),
         })
     }
 }
@@ -72,17 +73,23 @@ async fn add_cost_entry_impl(action: AddCostEntryAction) {
 
     match &*state {
         AppState::ReadingInputState(reading_input) => {
-            let new_cost_entry = CostEntry {
-                name: action.name,
-                initial_cost: action.initial_cost,
+            let cost_entry = match reading_input.current_entries.get(action.name.as_str()) {
+                Some(entry) => CostEntry {
+                    name: action.name,
+                    initial_cost: action.initial_cost + entry.initial_cost,
+                },
+                None => CostEntry {
+                    name: action.name,
+                    initial_cost: action.initial_cost,
+                },
             };
 
-            let mut current_entries = reading_input.current_entries.to_vec();
-            current_entries.push(new_cost_entry);
+            let mut entries = reading_input.current_entries.clone();
+            entries.insert(cost_entry.name.clone(), cost_entry);
 
-            let new_state = AppState::ReadingInputState(ReadingInputState { current_entries });
-
-            *state = new_state;
+            *state = AppState::ReadingInputState(ReadingInputState {
+                current_entries: entries,
+            })
         }
         _ => {}
     }
@@ -100,7 +107,7 @@ async fn calculate_final_costs_impl(action: CalculateAction) {
                 reading_input
                     .current_entries
                     .iter()
-                    .map(|entry| (Some(entry.name.clone()), entry.initial_cost as f64))
+                    .map(|(_, entry)| (Some(entry.name.clone()), entry.initial_cost as f64))
                     .collect(),
                 action.final_total as f64,
             )
@@ -123,7 +130,7 @@ async fn calculate_final_costs_impl(action: CalculateAction) {
 
 async fn reset_impl() {
     let new_state = AppState::ReadingInputState(ReadingInputState {
-        current_entries: Vec::new(),
+        current_entries: HashMap::new(),
     });
 
     let mut state = STATE

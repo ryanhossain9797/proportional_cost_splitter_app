@@ -62,10 +62,9 @@ pub async fn handle_request(request_unique: RustRequestUnique) -> RustResponseUn
                             padding: 1.,
                             current_cost_entries: state
                                 .current_entries
-                                .to_vec()
-                                .into_iter()
-                                .map(|current_cost_entry| CurrentCostEntryDto {
-                                    name: current_cost_entry.name,
+                                .iter()
+                                .map(|(_, current_cost_entry)| CurrentCostEntryDto {
+                                    name: current_cost_entry.name.clone(),
                                     cost: current_cost_entry.initial_cost,
                                 })
                                 .collect::<Vec<_>>(),
