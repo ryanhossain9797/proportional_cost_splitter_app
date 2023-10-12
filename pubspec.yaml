@@ -37,7 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter_rust_bridge: ^1.78.0
   freezed_annotation: ^2.4.1
-  rust_in_flutter: ^4.1.0
+  rust_in_flutter: ^4.11.6
   protobuf: ^3.1.0
 
 dev_dependencies:
