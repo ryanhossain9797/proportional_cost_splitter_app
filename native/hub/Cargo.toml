@@ -7,17 +7,18 @@ edition = "2021"
 [lib]
 # `lib` is required for non-library targets,
 # such as tests and benchmarks.
+# `cdylib` is for Linux, Android, Windows, and web.
 # `staticlib` is for iOS and macOS.
-# `cdylib` is for all other platforms.
 crate-type = ["lib", "cdylib", "staticlib"]
 
 # These are dependencies for non-web platforms.
 [target.'cfg(not(target_family = "wasm"))'.dependencies]
 libc = "0.2"
 dart-sys = { version = "4.0.2" }
-allo-isolate = { version = "0.1.18", features = ["zero-copy"] }
+allo-isolate = { version = "0.1.20", features = ["zero-copy"] }
 tokio = { version = "1.28.2", features = ["rt-multi-thread", "time"] }
 os-thread-local = "0.1.3"
+backtrace = "0.3.69"
 
 # These are dependencies for the web.
 [target.'cfg(target_family = "wasm")'.dependencies]
@@ -32,9 +33,8 @@ web-sys = { version = "0.3.64", features = [
     "Worker",
     "Url",
     "BroadcastChannel",
-    "console",
 ] }
-gloo-timers = { version = "0.3.0", features = ["futures"] }
+async_wasm_task = "0.2.3"
 
 [dependencies]
 bytemuck = "1.11.0"

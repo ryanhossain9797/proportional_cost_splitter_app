@@ -30,19 +30,19 @@ pub async fn handle_request(request_unique: RustRequestUnique) -> RustResponseUn
         (RustOperation::Update, Some(message)) => {
             let rust_response = match rust_resource {
                 add_cost_entry_action::ID => {
-                    crate::print!("AddCostEntryAction");
+                    crate::debug_print!("AddCostEntryAction");
                     let dto = AddCostEntryActionDto::decode(&message[..]).unwrap();
                     handle_app_action(dto.into()).await;
                     successful_empty_rust_response()
                 }
                 calculate_action::ID => {
-                    crate::print!("CalculateAction");
+                    crate::debug_print!("CalculateAction");
                     let dto = CalculateActionDto::decode(&message[..]).unwrap();
                     handle_app_action(dto.into()).await;
                     successful_empty_rust_response()
                 }
                 reset_action::ID => {
-                    crate::print!("ResetAction");
+                    crate::debug_print!("ResetAction");
                     handle_app_action(AppAction::ResetAction).await;
                     successful_empty_rust_response()
                 }
@@ -56,7 +56,7 @@ pub async fn handle_request(request_unique: RustRequestUnique) -> RustResponseUn
 
             match &*new_state {
                 AppState::ReadingInputState(state) => {
-                    crate::print!("ReadingInputState");
+                    crate::debug_print!("ReadingInputState");
                     let signal_message = AppStateDto {
                         state: Some(app_state_dto::State::ReadingInput(ReadingInputStateDto {
                             padding: 1.,
@@ -80,7 +80,7 @@ pub async fn handle_request(request_unique: RustRequestUnique) -> RustResponseUn
                 }
 
                 AppState::CalculatedState(state) => {
-                    crate::print!("CalculatedState");
+                    crate::debug_print!("CalculatedState");
                     let state = AppStateDto {
                         state: Some(app_state_dto::State::Calculated(CalculatedStateDto {
                             final_costs: state
