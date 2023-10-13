@@ -43,12 +43,17 @@ pub struct AddCostEntryAction {
     pub initial_cost: f32,
 }
 
+pub struct RemoveCostEntryAction {
+    pub name: String,
+}
+
 pub struct CalculateAction {
     pub final_total: f32,
 }
 
 pub enum AppAction {
     AddCostEntryAction(AddCostEntryAction),
+    RemoveCostEntryAction(RemoveCostEntryAction),
     CalculateAction(CalculateAction),
     ResetAction,
 }
@@ -57,6 +62,9 @@ pub async fn handle_app_action(action: AppAction) {
     match action {
         AppAction::AddCostEntryAction(add_cost_entry_action) => {
             add_cost_entry_impl(add_cost_entry_action).await
+        }
+        AppAction::RemoveCostEntryAction(remove_cost_entry_action) => {
+            remove_cost_entry_impl(remove_cost_entry_action).await
         }
         AppAction::CalculateAction(calculate_action) => {
             calculate_final_costs_impl(calculate_action).await
@@ -86,6 +94,25 @@ async fn add_cost_entry_impl(action: AddCostEntryAction) {
 
             let mut entries = reading_input.current_entries.clone();
             entries.insert(cost_entry.name.clone(), cost_entry);
+
+            *state = AppState::ReadingInputState(ReadingInputState {
+                current_entries: entries,
+            })
+        }
+        _ => {}
+    }
+}
+
+async fn remove_cost_entry_impl(action: RemoveCostEntryAction) {
+    let mut state = STATE
+        .get_or_init(|| Mutex::new(AppState::default()))
+        .lock()
+        .unwrap();
+
+    match &*state {
+        AppState::ReadingInputState(reading_input) => {
+            let mut entries = reading_input.current_entries.clone();
+            entries.remove(&action.name);
 
             *state = AppState::ReadingInputState(ReadingInputState {
                 current_entries: entries,

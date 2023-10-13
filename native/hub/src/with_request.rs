@@ -9,13 +9,12 @@ use crate::bridge::send_rust_signal;
 use crate::functions::successful_empty_rust_response;
 use crate::messages::add_cost_entry_action::AddCostEntryActionDto;
 use crate::messages::calculate_action::CalculateActionDto;
-use crate::messages::state::app_state_dto::State;
+use crate::messages::remove_cost_entry_action::RemoveCostEntryActionDto;
 use crate::messages::state::{
     app_state_dto, AppStateDto, CalculatedStateDto, CurrentCostEntryDto, FinalCostDto,
     ReadingInputStateDto,
 };
 use crate::messages::*;
-use crate::messages::{self, state};
 use app_state::{handle_app_action, AppAction, AppState};
 use prost::Message;
 use std::sync::Mutex;
@@ -32,6 +31,12 @@ pub async fn handle_request(request_unique: RustRequestUnique) -> RustResponseUn
                 add_cost_entry_action::ID => {
                     crate::debug_print!("AddCostEntryAction");
                     let dto = AddCostEntryActionDto::decode(&message[..]).unwrap();
+                    handle_app_action(dto.into()).await;
+                    successful_empty_rust_response()
+                }
+                remove_cost_entry_action::ID => {
+                    crate::debug_print!("AddCostEntryAction");
+                    let dto = RemoveCostEntryActionDto::decode(&message[..]).unwrap();
                     handle_app_action(dto.into()).await;
                     successful_empty_rust_response()
                 }

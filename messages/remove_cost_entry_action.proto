@@ -1,0 +1,6 @@
+syntax = "proto3";
+package remove_cost_entry_action;
+
+message RemoveCostEntryActionDto {
+  string name = 1;
+}

@@ -4,10 +4,8 @@
 use crate::bridge::api::RustResponse;
 use crate::messages::add_cost_entry_action::AddCostEntryActionDto;
 use crate::messages::calculate_action::CalculateActionDto;
-use app_state::AddCostEntryAction;
-use app_state::AppAction;
-use app_state::CalculateAction;
-use app_state::CostEntry;
+use crate::messages::remove_cost_entry_action::RemoveCostEntryActionDto;
+use app_state::{AddCostEntryAction, AppAction, CalculateAction, RemoveCostEntryAction};
 
 impl Into<AppAction> for AddCostEntryActionDto {
     fn into(self) -> AppAction {
@@ -15,6 +13,12 @@ impl Into<AppAction> for AddCostEntryActionDto {
             name: self.name,
             initial_cost: self.initial_cost,
         })
+    }
+}
+
+impl Into<AppAction> for RemoveCostEntryActionDto {
+    fn into(self) -> AppAction {
+        AppAction::RemoveCostEntryAction(RemoveCostEntryAction { name: self.name })
     }
 }
 

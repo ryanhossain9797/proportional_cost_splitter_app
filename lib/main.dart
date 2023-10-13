@@ -6,6 +6,10 @@ import 'package:proportional_cost_splitter_app/routes/input.dart';
 import 'package:proportional_cost_splitter_app/routes/result.dart';
 import 'package:rust_in_flutter/rust_in_flutter.dart';
 
+const double verticalPadding = 5;
+const double horizontalPadding = 15;
+const Color rowColor = Colors.black38;
+
 void main() async {
   await RustInFlutter.ensureInitialized();
   runApp(const MyApp());

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:proportional_cost_splitter_app/main.dart';
 import 'package:proportional_cost_splitter_app/messages/state.pbserver.dart';
 import 'package:proportional_cost_splitter_app/messages/reset_action.pb.dart'
     as reset_action;
@@ -17,12 +18,13 @@ class ResultScreen extends StatelessWidget {
         child: ListView(
           children: state.finalCosts
               .map((entry) => Container(
-                    margin:
-                        const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                    margin: const EdgeInsets.symmetric(
+                        vertical: verticalPadding,
+                        horizontal: horizontalPadding),
                     padding: const EdgeInsets.symmetric(
                         vertical: 15, horizontal: 15),
                     decoration: BoxDecoration(
-                      color: Colors.deepPurple,
+                      color: rowColor,
                       border: Border.all(
                         width: 2,
                       ),

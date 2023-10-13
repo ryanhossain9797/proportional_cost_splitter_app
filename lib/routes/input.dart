@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:proportional_cost_splitter_app/main.dart';
 import 'package:proportional_cost_splitter_app/messages/add_cost_entry_action.pb.dart'
     as add_cost_entry_action;
 import 'package:proportional_cost_splitter_app/messages/calculate_action.pb.dart'
     as calculate_action;
+import 'package:proportional_cost_splitter_app/messages/remove_cost_entry_action.pb.dart'
+    as remove_cost_entry_action;
 import 'package:proportional_cost_splitter_app/messages/state.pb.dart';
 import 'package:rust_in_flutter/rust_in_flutter.dart';
 
@@ -51,12 +54,14 @@ class _InputScreenState extends State<InputScreen> {
                 itemCount: widget.state.currentCostEntries.length,
                 itemBuilder: (context, index) {
                   return Container(
-                    margin:
-                        const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                    margin: const EdgeInsets.symmetric(
+                        vertical: verticalPadding,
+                        horizontal: horizontalPadding),
                     padding: const EdgeInsets.symmetric(
-                        vertical: 15, horizontal: 15),
+                        vertical: verticalPadding,
+                        horizontal: horizontalPadding),
                     decoration: BoxDecoration(
-                      color: Colors.deepPurple,
+                      color: rowColor,
                       border: Border.all(
                         width: 2,
                       ),
@@ -76,13 +81,25 @@ class _InputScreenState extends State<InputScreen> {
                           style: const TextStyle(
                               fontSize: 28, color: Colors.white),
                         ),
-                        // CloseButton(
-                        //   onPressed: () {
-                        //     costEntries.removeAt(index);
-                        //     setState(() {});
-                        //   },
-                        //   color: Colors.redAccent,
-                        // )
+                        CloseButton(
+                          onPressed: () {
+                            final removeCostEntryAction =
+                                remove_cost_entry_action
+                                    .RemoveCostEntryActionDto(
+                                        name: widget.state
+                                            .currentCostEntries[index].name);
+                            final rustRequest = RustRequest(
+                              resource: remove_cost_entry_action.ID,
+                              operation: RustOperation.Update,
+                              message: removeCostEntryAction.writeToBuffer(),
+                            );
+
+                            setState(() {});
+
+                            requestToRust(rustRequest);
+                          },
+                          color: Colors.redAccent,
+                        )
                       ],
                     ),
                   );
